@@ -2,21 +2,22 @@ package ar.com.eventos.domain;
 
 import java.util.*;
 
+import ar.com.eventos.enumeration.TiposDeCocinaEnum;
+
 public class Cheff extends Persona {
-    private String especialidad;
+    private TiposDeCocinaEnum especialidad;
     private List<EventoGastronomico> eventos = new ArrayList<>();
 
-    public Cheff(String nombre, String apellido, String dni, String telefono, String correoelectronico, String especialidad, List<EventoGastronomico> eventos){
-        super(nombre, apellido, dni, telefono, correoelectronico);
+    public Cheff(String nombre, String apellido, String dni, TiposDeCocinaEnum especialidad, List<EventoGastronomico> eventos){
+        super(nombre, apellido, dni);
         setEspecialidad(especialidad);
         setEventos(eventos);
     }
 
-    
-    public void setEspecialidad(String especialidad) {
+    public void setEspecialidad(TiposDeCocinaEnum especialidad) {
         this.especialidad = especialidad;
     }
-    public String getEspecialidad() {
+    public TiposDeCocinaEnum getEspecialidad() {
         return especialidad;
     }
     public void setEventos(List<EventoGastronomico> eventos) {
@@ -31,8 +32,6 @@ public class Cheff extends Persona {
         return  "ID: " + this.getId()
                 + " Nombre y Apellido : " + this.getNombre() + " " + this.getApellido()
                 + " DNI: " + this.getDni()
-                + " Telefono : " + this.getTelefono()
-                + " Correo electronico : " + this.getCorreoElectronico()
                 + " Especialidad: " + this.especialidad;
     }
 }

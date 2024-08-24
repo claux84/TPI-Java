@@ -6,7 +6,6 @@ import java.util.List;
 public class GestionDeEventos {
     private List<EventoGastronomico> eventosGastronomicos = new ArrayList<>();
     private List<Cheff> cheffs = new ArrayList<>();
-    private List<Participante> participantes = new ArrayList<>();
 
     public void setEventosGastronomicos(List<EventoGastronomico> eventosGastronomicos) {
         this.eventosGastronomicos = eventosGastronomicos;
@@ -24,12 +23,4 @@ public class GestionDeEventos {
         return cheffs;
     }
 
-    public void setParticipantes(List<Participante> participantes) {
-        this.participantes = participantes;
-    }
-
-    public List<Participante> getParticipantes() {
-        return participantes;
-    }
-    
 }

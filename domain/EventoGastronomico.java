@@ -3,6 +3,8 @@ package ar.com.eventos.domain;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class EventoGastronomico {
@@ -15,9 +17,9 @@ public class EventoGastronomico {
     private int capacidad;
     private Cheff cheff;
     private List<Resenia> resenias = new ArrayList<>();
-    private List<Participante> participantes = new ArrayList<>();
+    private Map<Integer, Participante> participantes = new TreeMap<>();
 
-    public EventoGastronomico( String nombre, String descripcion, LocalDateTime fechaYHora, String ubicacion, int capacidad, Cheff cheff, List<Resenia> resenias, List<Participante> participantes){
+    public EventoGastronomico( String nombre, String descripcion, LocalDateTime fechaYHora, String ubicacion, int capacidad, Cheff cheff, List<Resenia> resenias, Map<Integer, Participante> participantes){
         setId();
         setNombre(nombre);
         setDescripcion(descripcion);
@@ -26,7 +28,7 @@ public class EventoGastronomico {
         setCapacidad(capacidad);
         setCheff(cheff);
         setResenias(resenias);
-        setParticipantes(participantes);
+        setParticipantes(participantes); 
     }
 
     public void setId() {
@@ -81,15 +83,16 @@ public class EventoGastronomico {
         return resenias;
     }
 
-    public void setParticipantes(List<Participante> participantes) {
+    public void setParticipantes(Map<Integer, Participante> participantes) {
         this.participantes = participantes;
     }
 
-    public List<Participante> getParticipantes() {
+    public Map<Integer, Participante> getParticipantes() {
         return participantes;
     }
 
-    private int cantidadDeParticipantes(List<Participante> participantes){
+
+    private int cantidadDeParticipantes( Map<Integer, Participante> participantes){
         int cantidadDePArticipantes = participantes.size();
         return cantidadDePArticipantes;
     }

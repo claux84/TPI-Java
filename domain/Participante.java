@@ -2,22 +2,24 @@ package ar.com.eventos.domain;
 
 import java.util.*;
 
+import ar.com.eventos.enumeration.TiposDeCocinaEnum;
+
 public class Participante extends Persona{
-    private String interesesCulinarios;
+    private Set<TiposDeCocinaEnum> interesesCulinarios = new HashSet<>();
     private List<EventoGastronomico> historialDeEventos = new ArrayList<>(); 
 
-    public Participante(String nombre, String apellido, String dni, String telefono, String correoelectronico, String interesesCulinarios, List<EventoGastronomico> historialDeEventos){
-        super(nombre, apellido, dni, telefono, correoelectronico);
+    public Participante(String nombre, String apellido, String dni, Set<TiposDeCocinaEnum> interesesCulinarios, List<EventoGastronomico> historialDeEventos){
+        super(nombre, apellido, dni);
         setInteresesCulinarios(interesesCulinarios);
         setHistorialDeEventos(historialDeEventos);
     }
-
-    public void setInteresesCulinarios(String interesesCulinarios) {
+    public void setInteresesCulinarios(Set<TiposDeCocinaEnum> interesesCulinarios) {
         this.interesesCulinarios = interesesCulinarios;
     }
-    public String getInteresesCulinarios() {
+    public Set<TiposDeCocinaEnum> getInteresesCulinarios() {
         return interesesCulinarios;
     }
+
     public void setHistorialDeEventos(List<EventoGastronomico> historialDeEventos) {
         this.historialDeEventos = historialDeEventos;
     }
@@ -30,11 +32,9 @@ public class Participante extends Persona{
     @Override
     public String toString(){
         return  "ID: " + this.getId()
-                + "Nombre y Apellido : " + this.getNombre() + " " + this.getApellido()
+                + " Nombre y Apellido : " + this.getNombre() + " " + this.getApellido()
                 + " DNI: " + this.getDni()
-                + " Telefono : " + this.getTelefono()
-                + " Correo electronico : " + this.getCorreoElectronico()
-                + " Intereses Culinarios : " + this.interesesCulinarios;
+                + " Intereses Culinarios : " + this.interesesCulinarios.toString();
 
     }
 }

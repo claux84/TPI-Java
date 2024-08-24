@@ -10,16 +10,12 @@ public class Persona {
     private String nombre;
     private String apellido;
     private String dni;
-    private String telefono;
-    private String correoElectronico;
 
-    public Persona( String nombre, String apellido, String dni, String telefono, String correoElectronico){
+    public Persona( String nombre, String apellido, String dni){
         setId();
         setNombre(nombre);
         setApellido(apellido);
         setDni(dni);
-        setTelefono(telefono);
-        setCorreoelectronico(correoElectronico);
     }
 
     public void setId() {
@@ -75,69 +71,6 @@ public class Persona {
         return dni;
     }
     
-    public void setTelefono(String telefono) {
-        boolean telefonoValido =validarTelefono(telefono);
-        if (telefonoValido) {
-            this.telefono = telefono;
-        } else {
-            System.out.println("Formato de número telefonico invalido");
-        }
-        
-       
-        this.telefono = telefono;
-    }
-
-    private boolean validarTelefono(String telefono){
-        String patronTelefono = "[0-9]{9,10}";
-        Pattern patron = Pattern.compile(patronTelefono);
-        if (telefono!= null) {
-            Matcher coincidencia = patron.matcher(telefono);
-            if (coincidencia.matches()) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-
-    }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setCorreoelectronico(String correoElectronico) {
-        boolean correoValido =validarCorreo(correoElectronico);
-        if (correoValido) {
-            this.correoElectronico = correoElectronico;
-        } else {
-            System.out.println("Formato de correo electronico invalido");
-        }
-        
-        this.correoElectronico = correoElectronico;
-    }
-
-    private boolean validarCorreo(String correoElectronico){
-        String patronCorreo = "^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@" + "[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,4})$";
-        Pattern patron = Pattern.compile(patronCorreo);
-        if (correoElectronico != null) {
-            Matcher coincidencia = patron.matcher(correoElectronico);
-            if (coincidencia.matches()) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-
-    }
-
-    public String getCorreoElectronico() {
-        return correoElectronico;
-    }
 
 
 }

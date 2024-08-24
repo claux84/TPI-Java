@@ -1,6 +1,6 @@
 package ar.com.eventos.domain;
 
-import ar.com.eventos.enumeration.CalificacionEnum;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Resenia {
@@ -8,10 +8,10 @@ public class Resenia {
     private static AtomicInteger atomicInteger = new AtomicInteger(0);
     private Participante participante;
     private EventoGastronomico eventoGastronomico;
-    private CalificacionEnum calificacion;
+    private int calificacion;
     private String comentario;
 
-    public Resenia( Participante participante, EventoGastronomico eventoGastronomico, CalificacionEnum calificacion, String comentario){
+    public Resenia( Participante participante, EventoGastronomico eventoGastronomico, int calificacion, String comentario){
         setId();
         setParticipante(participante);
         setEventoGastronomico(eventoGastronomico);
@@ -37,11 +37,23 @@ public class Resenia {
     public EventoGastronomico getEventoGastronomico() {
         return eventoGastronomico;
     }
-    public void setCalificacion(CalificacionEnum calificacion) {
-        this.calificacion = calificacion;
+    public void setCalificacion(int calificacion) {
+        boolean calificacionValida = validarCalificacion(calificacion);
+        if (calificacionValida){
+            this.calificacion = calificacion;
+        } else {
+            System.out.println( "Calificacion invalida");
+        }
     }
-    public CalificacionEnum getCalificacion() {
+    public int getCalificacion() {
         return calificacion;
+    }
+    private boolean validarCalificacion(int calificacion){
+        if (calificacion >= 1 && calificacion <= 5){
+            return true;
+        } else {
+            return false;
+        }
     }
     public void setComentario(String comentario) {
         this.comentario = comentario;
