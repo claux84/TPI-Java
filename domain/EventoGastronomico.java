@@ -17,7 +17,7 @@ public class EventoGastronomico {
     private int capacidad;
     private Cheff cheff;
     private List<Resenia> resenias = new ArrayList<>();
-    private Map<Integer, Participante> participantes = new TreeMap<>();
+    private Map<Integer , Participante> participantes = new TreeMap<>();
 
     public EventoGastronomico( String nombre, String descripcion, LocalDateTime fechaYHora, String ubicacion, int capacidad, Cheff cheff, List<Resenia> resenias, Map<Integer, Participante> participantes){
         setId();
@@ -30,6 +30,11 @@ public class EventoGastronomico {
         setResenias(resenias);
         setParticipantes(participantes); 
     }
+
+    public EventoGastronomico(){
+        setId();
+    }
+
 
     public void setId() {
         this.id = atomicInteger.incrementAndGet();
@@ -97,15 +102,26 @@ public class EventoGastronomico {
         return cantidadDePArticipantes;
     }
 
+    private String cheffToString(){
+        String nombreYApellido = null;
+        if (this.cheff != null) {
+            nombreYApellido = " Nombre y Apellido : " + this.cheff.getNombre() + " " + this.cheff.getApellido();
+        } else {
+            nombreYApellido = " No hay cheff asignado ";
+            
+        }
+        return nombreYApellido;
+    }
+
     @Override
     public String toString(){
         return  "ID: " + this.id
-                + "Nombre : " + this.nombre
+                + " Nombre : " + this.nombre
                 + " Descripción: " + this.descripcion
                 + " Fecha y Hora : " + this.fechaYHora
                 + " Ubicación : " + this.ubicacion
                 + " Capacidad: " + this.capacidad
-                + " Cheff a cargo: " + this.cheff.getNombre() + " " + this.cheff.getApellido()
+                + " Cheff a cargo: " + this.cheffToString()
                 + " Cantidad de participantes inscriptos: " + this.cantidadDeParticipantes(this.participantes)
                 + " Reseñas del evento : " + this.resenias.toString();
     }

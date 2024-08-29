@@ -1,13 +1,24 @@
 package ar.com.eventos;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Scanner;
+import java.util.TreeMap;
 import java.util.List;
-import ar.com.eventos.enumeration.TiposDeCocinaEnum;
-import ar.com.eventos.domain.*;
+import java.util.Map;
 
-import ar.com.eventos.domain.Participante;
+import ar.com.eventos.domain.GestionDeEventos;
+import ar.com.eventos.domain.EventoGastronomico;
+import ar.com.eventos.domain.Cheff;
+import ar.com.eventos.service.cheff.CheffService;
+import ar.com.eventos.service.cheff.impl.CheffServiceImpl;
+import ar.com.eventos.service.eventogastronomico.EventoGastronomicoService;
+import ar.com.eventos.service.eventogastronomico.impl.EventoGastronomicoServiceImpl;
+import ar.com.eventos.service.gestiondeeventos.GestionDeEventosService;
+import ar.com.eventos.service.gestiondeeventos.impl.GestionDeEventosServiceImpl;
+import ar.com.eventos.service.menu.MenuService;
+import ar.com.eventos.service.menu.impl.MenuServiceImpl;
+import ar.com.eventos.service.participante.ParticipanteService;
+import ar.com.eventos.service.participante.impl.ParticipanteServiceImpl;
 
 /**
  * Hello world!
@@ -15,15 +26,19 @@ import ar.com.eventos.domain.Participante;
  */
 public class App {
     public static void main( String[] args ){
-        Set<TiposDeCocinaEnum> interesesCulinarios1 = new HashSet<>();
-        interesesCulinarios1.add(TiposDeCocinaEnum.PANADERIA);
-        interesesCulinarios1.add(TiposDeCocinaEnum.PASTELERIA);
-        interesesCulinarios1.add(TiposDeCocinaEnum.COCINA_INTERNACIONAL);
-        List<EventoGastronomico> eventoGastronomico1 = new ArrayList<>();
+        List<EventoGastronomico> eventosGastronomicos = new ArrayList<>();
+        Map<Integer, Cheff> cheffs = new TreeMap<>();
 
+        GestionDeEventos gestionDeEventos = new GestionDeEventos(eventosGastronomicos, cheffs);
+        GestionDeEventosService gestionDeEventosService = new GestionDeEventosServiceImpl(gestionDeEventos);
+        ParticipanteService participanteService = new ParticipanteServiceImpl(gestionDeEventosService);
+        CheffService cheffService = new CheffServiceImpl(gestionDeEventosService);
 
-    
-       Participante participante = new Participante("Claudio", "Ramirez", "30789604", interesesCulinarios1, eventoGastronomico1 );
-        System.out.println(participante.toString());
+        EventoGastronomicoService eventoGastronomicoService = new EventoGastronomicoServiceImpl(gestionDeEventosService, participanteService, cheffService);
+        MenuService menuService = new MenuServiceImpl(eventoGastronomicoService, null, cheffService, gestionDeEventosService);
+        Scanner scanner = new Scanner((System.in));
+        menuService.mostrarMenu(scanner);
+
+        scanner.close();
     }
 }
