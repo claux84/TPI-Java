@@ -65,7 +65,6 @@ public class Resenia {
     @Override
     public String toString(){
         return  "ID: " + this.id
-                + " Evento Gastronomico: " + this.eventoGastronomico.getNombre() 
                 + " Participante : " + this.participante.getNombre() + " " + this.participante.getApellido()
                 + " Calificación: " + this.calificacion
                 + " Comentario : " + this.comentario;

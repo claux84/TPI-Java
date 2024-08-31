@@ -97,15 +97,20 @@ public class EventoGastronomico {
     }
 
 
-    private int cantidadDeParticipantes( Map<Integer, Participante> participantes){
-        int cantidadDePArticipantes = participantes.size();
-        return cantidadDePArticipantes;
+    public int cantidadDeParticipantes(){
+        int cantidadDeParticipantes = this.participantes.size();
+        return cantidadDeParticipantes;
     }
 
-    private String cheffToString(){
+    public int cantidadDeResenias(){
+        int cantidadDeResenias = this.resenias.size();
+        return cantidadDeResenias;
+    }
+
+    public String cheffToString(){
         String nombreYApellido = null;
         if (this.cheff != null) {
-            nombreYApellido = " Nombre y Apellido : " + this.cheff.getNombre() + " " + this.cheff.getApellido();
+            nombreYApellido = this.cheff.getNombre() + " " + this.cheff.getApellido();
         } else {
             nombreYApellido = " No hay cheff asignado ";
             
@@ -122,8 +127,8 @@ public class EventoGastronomico {
                 + " Ubicación : " + this.ubicacion
                 + " Capacidad: " + this.capacidad
                 + " Cheff a cargo: " + this.cheffToString()
-                + " Cantidad de participantes inscriptos: " + this.cantidadDeParticipantes(this.participantes)
-                + " Reseñas del evento : " + this.resenias.toString();
+                + " Cantidad de participantes inscriptos: " + this.cantidadDeParticipantes()
+                + " Cantidad de reseñas del evento : " + this.cantidadDeResenias();
     }
 
     

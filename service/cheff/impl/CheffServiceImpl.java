@@ -23,22 +23,18 @@ public class CheffServiceImpl implements CheffService {
 
     @Override
     public Cheff registrarCheff(){
-        Cheff nuevoCheff = new Cheff(null, null, null, null, null);
-        nuevoCheff.setId();
+        
         Scanner scanner = new Scanner(System.in);
         System.out.println("Ingrese el nombre del cheff: ");
         String nombreCheff = scanner.nextLine();
         scanner.nextLine();
-        nuevoCheff.setNombre(nombreCheff);
 
         System.out.println("Ingrese el apellido del cheff: ");
         String apellidoCheff = scanner.nextLine();
         scanner.nextLine();
-        nuevoCheff.setApellido(apellidoCheff);
 
         System.out.println("Ingrese el dni del cheff: ");
         String dniCheff = scanner.nextLine();
-        nuevoCheff.setDni(dniCheff);
         scanner.nextLine();
 
         System.out.println("Ingrese la especialidad del cheff");
@@ -47,11 +43,12 @@ public class CheffServiceImpl implements CheffService {
         System.out.println("3. Cocina Nacional");
         System.out.println("4. Cocina Internacional");
         System.out.println("5. Bar y Cocteleria");
-        int especialidadCheff = scanner.nextInt();
+        int opcion = scanner.nextInt();
         scanner.nextLine();
+        TiposDeCocinaEnum especialidadCheff;
 
-        nuevoCheff.setEspecialidad(
-            switch (especialidadCheff){
+        especialidadCheff = (
+            switch (opcion){
                 case 1 -> TiposDeCocinaEnum.PANADERIA;
                 case 2 -> TiposDeCocinaEnum.PASTELERIA;
                 case 3 -> TiposDeCocinaEnum.COCINA_NACIONAL;
@@ -62,7 +59,8 @@ public class CheffServiceImpl implements CheffService {
         );
 
         List<EventoGastronomico> eventos = new ArrayList<>();
-        nuevoCheff.setEventos(eventos);
+        
+        Cheff nuevoCheff = new Cheff(nombreCheff, apellidoCheff, dniCheff, especialidadCheff, eventos);
 
         gestionDeEventosService.getCheffs().put(nuevoCheff.getId(), nuevoCheff);
 

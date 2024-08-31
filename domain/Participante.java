@@ -34,7 +34,8 @@ public class Participante extends Persona{
         return  "ID: " + this.getId()
                 + " Nombre y Apellido : " + this.getNombre() + " " + this.getApellido()
                 + " DNI: " + this.getDni()
-                + " Intereses Culinarios : " + this.interesesCulinarios.toString();
+                + " Intereses Culinarios : " + this.interesesCulinarios.toString()
+                + " Historial de Eventos: " + this.historialDeEventos.toString();
 
     }
 }

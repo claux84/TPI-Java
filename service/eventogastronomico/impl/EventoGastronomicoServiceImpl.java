@@ -17,96 +17,99 @@ import ar.com.eventos.service.cheff.CheffService;
 import ar.com.eventos.service.eventogastronomico.EventoGastronomicoService;
 import ar.com.eventos.service.gestiondeeventos.GestionDeEventosService;
 import ar.com.eventos.service.participante.ParticipanteService;
+import ar.com.eventos.service.resenia.ReseniaService;
 
 public class EventoGastronomicoServiceImpl implements EventoGastronomicoService{
     private GestionDeEventosService gestionDeEventosService;
     private ParticipanteService participanteService;
     private CheffService cheffService;
+    private ReseniaService reseniaService;
 
-    public EventoGastronomicoServiceImpl(GestionDeEventosService gestionDeEventosService, ParticipanteService participanteService, CheffService cheffService){
+    public EventoGastronomicoServiceImpl(GestionDeEventosService gestionDeEventosService, ParticipanteService participanteService, CheffService cheffService, ReseniaService reseniaService){
         this.gestionDeEventosService = gestionDeEventosService;
         this.participanteService = participanteService;
         this.cheffService = cheffService;
+        this.reseniaService = reseniaService;
     }
-
-
-
-
 
     @Override
     public EventoGastronomico crearEvento(Scanner scanner) {
-        EventoGastronomico nuevoEventoGastronomico = new EventoGastronomico();
-        
         System.out.println("Crear nuevo evento Gastronómico");
         System.out.println("---------------------------------");
-
-        nuevoEventoGastronomico.setId();
         System.out.println("Ingrese el nombre del evento gastronómico: ");
         String nombre = scanner.nextLine();
         scanner.nextLine();
-        nuevoEventoGastronomico.setNombre(nombre);
         System.out.println("Ingrese la descripción del evento gastronómico: ");
         String descripcion = scanner.nextLine();
         scanner.nextLine();
-        nuevoEventoGastronomico.setDescripcion(descripcion);
         System.out.println("Ingrese la fecha y hora en la que se realizara el evento gastronómico (formato: 01-01-2024 12:00 ): ");
         String fechaString = scanner.nextLine();
         scanner.nextLine();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
         LocalDateTime fechaYHora = LocalDateTime.parse(fechaString, formatter);
-        nuevoEventoGastronomico.setFechaYHora(fechaYHora);
         System.out.println("Ingrese la ubicación del evento gastronómico: ");
         String ubicacion = scanner.nextLine();
         scanner.nextLine();
-        nuevoEventoGastronomico.setUbicacion(ubicacion);
         System.out.println("Ingrese la capacidad maxima de participantes del evento gastronómico: ");
         int capacidad = scanner.nextInt();
         scanner.nextLine();
-        nuevoEventoGastronomico.setCapacidad(capacidad);
         List<Resenia> resenias = new ArrayList<>();
-        nuevoEventoGastronomico.setResenias(resenias);
         Map<Integer, Participante> participantes = new TreeMap<>();
-        nuevoEventoGastronomico.setParticipantes(participantes);
+        EventoGastronomico nuevoEventoGastronomico = new EventoGastronomico(nombre, descripcion, fechaYHora, ubicacion, capacidad, null, resenias, participantes);
         gestionDeEventosService.getEventos().add(nuevoEventoGastronomico);
         System.out.println("Evento gastronómico creado");
         return nuevoEventoGastronomico;
     }
 
     @Override
-    public void listarEventos() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
     public void inscribirParticipante(Integer idEvento) {
         Participante participante = participanteService.registrarParticipante();
+        int index = -1;
         try {
-            int index = buscarEventoGastronomico(idEvento);
-            gestionDeEventosService.getEventos().get(index).getParticipantes().put(participante.getId(), participante);
-            System.out.println("Participante inscripto a evento gastronómico");
+            index = buscarEventoGastronomico(idEvento);
         } catch (Exception e) {
-                System.out.println(e.getMessage());
+            System.out.println(e.getMessage());
         } 
+        if (index != -1) {
+            int capacidad = gestionDeEventosService.getEventos().get(index).getCapacidad();
+            int cantidadDeParticipantes = gestionDeEventosService.getEventos().get(index).cantidadDeParticipantes();
+            if (cantidadDeParticipantes <= capacidad ) {
+                gestionDeEventosService.getEventos().get(index).getParticipantes().put(participante.getId(), participante);
+                System.out.println("Participante inscripto a evento gastronómico");
+            } else {
+                System.out.println("El participante no se pudo inscribir al evento gastronómico porque alcanzo su capacidad maxima");
+            }
+        }
     }
 
     @Override
     public void inscribirParticipanteAEvento(Integer idEvento, Integer idParticipante) {
         Participante participante = null;
+        int index = -1;
         try {
             participante= participanteService.buscarParticipante(idParticipante);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-        }
-        if (participante != null) {
-            try {
-                int index = buscarEventoGastronomico(idEvento);
-                gestionDeEventosService.getEventos().get(index).getParticipantes().put(participante.getId(), participante);
-                System.out.println("Participante inscripto a evento gastronómico");
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            } 
         } 
+        try {
+            index = buscarEventoGastronomico(idEvento);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } 
+        if (participante != null  && index != -1) {
+            int capacidad = gestionDeEventosService.getEventos().get(index).getCapacidad();
+            int cantidadDeParticipantes = gestionDeEventosService.getEventos().get(index).cantidadDeParticipantes();
+            if (cantidadDeParticipantes <= capacidad ) {
+                participante.setHistorialDeEventos(participanteService.crearHistorial(idParticipante));
+                participante.getHistorialDeEventos().add(gestionDeEventosService.getEventos().get(index));
+                gestionDeEventosService.getEventos().get(index).getParticipantes().put(participante.getId(), participante);
+                System.out.println("Participante inscripto a evento gastronómico");   
+            } else {
+                System.out.println("El participante no se pudo inscribir al evento gastronómico porque alcanzo su capacidad maxima");
+            }
+        }
+
+        
     }
 
     @Override
@@ -126,9 +129,7 @@ public class EventoGastronomicoServiceImpl implements EventoGastronomicoService{
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-        }
-        
-        
+        } 
     }
 
     @Override
@@ -151,9 +152,64 @@ public class EventoGastronomicoServiceImpl implements EventoGastronomicoService{
     }
 
     @Override
-    public void agregarReseniaDeParticipanteAEvento() {
-        // TODO Auto-generated method stub
-        
+    public void agregarReseniaDeParticipanteAEvento(Integer idEvento, Integer idParticipante ) {
+        Participante participante = null;
+        EventoGastronomico eventoGastronomico = null;
+        Resenia resenia = null;
+        int index = -1;
+        try {
+            index = buscarEventoGastronomico(idEvento);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } 
+        eventoGastronomico = gestionDeEventosService.getEventos().get(index);      
+        if (eventoGastronomico != null && eventoGastronomico.getFechaYHora().isBefore(LocalDateTime.now())) {
+            try {
+                participante= buscarParticipanteEnEvento(idParticipante, index);
+                resenia = reseniaService.crearResenia(participante,eventoGastronomico);
+                gestionDeEventosService.getEventos().get(index).getResenias().add(resenia);
+                System.out.println("Reseña a evento gastronómico creada");
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }     
+        } else{
+            System.out.println("El evento gastronómico seleccionado aun no se ha realizado");
+        }
     }
+
+    @Override
+    public void listarParticipantesDeEvento(Integer idEvento) {
+        int index = buscarEventoGastronomico(idEvento);
+        System.out.println("Lista de participantes del evento " + gestionDeEventosService.getEventos().get(index).getNombre());
+        for (Participante participante : gestionDeEventosService.getEventos().get(index).getParticipantes().values()) {
+            System.out.println(participante.toString());
+        }
+    }
+
+    @Override
+    public void listarReseniasDeEvento(Integer idEvento) {
+        int index = buscarEventoGastronomico(idEvento);
+        System.out.println("Lista de reseñas del evento " + gestionDeEventosService.getEventos().get(index).getNombre());
+        for (Resenia resenia : gestionDeEventosService.getEventos().get(index).getResenias()) {
+            System.out.println(resenia.toString());
+        }
+    }
+
+    @Override
+    public Participante buscarParticipanteEnEvento(Integer idParticipante, int index) {
+        Participante participante = null;
+        boolean existeElParticipante = Boolean.FALSE;
+        EventoGastronomico eventoGastronomico = gestionDeEventosService.getEventos().get(index);
+        if (eventoGastronomico.getParticipantes().containsKey(idParticipante)){
+            participante = eventoGastronomico.getParticipantes().get(idParticipante);
+            existeElParticipante = Boolean.TRUE;  
+        }
+        if (!existeElParticipante){
+            throw new NoSuchElementException("No existe el participante");
+        }else{
+            return participante;
+        }
+    }
+      
 
 }

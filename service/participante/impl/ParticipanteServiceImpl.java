@@ -26,22 +26,19 @@ public class ParticipanteServiceImpl implements ParticipanteService{
 
     @Override
     public Participante registrarParticipante() {
-        Participante nuevoParticipante = new Participante(null, null, null, null, null);
+        
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Ingrese el nombre del participante: ");
         String nombreParticipante = scanner.nextLine();
         scanner.nextLine();
-        nuevoParticipante.setNombre(nombreParticipante);
 
         System.out.println("Ingrese el apellido del participante: ");
         String apellidoParticipante = scanner.nextLine();
         scanner.nextLine();
-        nuevoParticipante.setApellido(apellidoParticipante);
 
         System.out.println("Ingrese el dni del participante: ");
         String dniParticipante = scanner.nextLine();
-        nuevoParticipante.setDni(dniParticipante);
         scanner.nextLine();
 
         Set<TiposDeCocinaEnum> interesesCulinarios = new HashSet<>();
@@ -69,9 +66,8 @@ public class ParticipanteServiceImpl implements ParticipanteService{
                 }
         );
         } while (opcion != 6);
-        nuevoParticipante.setInteresesCulinarios(interesesCulinarios);
         List<EventoGastronomico> historialDeEventos = new ArrayList<>();
-        nuevoParticipante.setHistorialDeEventos(historialDeEventos);        
+        Participante nuevoParticipante = new Participante(nombreParticipante, apellidoParticipante, dniParticipante, interesesCulinarios, historialDeEventos);        
         return nuevoParticipante;
     }
     @Override
@@ -81,8 +77,7 @@ public class ParticipanteServiceImpl implements ParticipanteService{
         for (EventoGastronomico eventoGastronomico: gestionDeEventosService.getEventos()){
             if (eventoGastronomico.getParticipantes().containsKey(idParticipante)){
                 participante = eventoGastronomico.getParticipantes().get(idParticipante);
-                existeElParticipante = Boolean.TRUE;
-                break;
+                existeElParticipante = Boolean.TRUE;  
             }
         }
         if (!existeElParticipante){
@@ -92,13 +87,14 @@ public class ParticipanteServiceImpl implements ParticipanteService{
     }
 
     @Override
-    public Participante buscarParticipantePorDni(String dniParticipante) {
+    public Integer buscarParticipantePorDni(String dniParticipante) {
         Boolean existeParticipante = Boolean.FALSE;
-        Participante participanteBuscado = null;
+        Integer participanteBuscado = null;
         for (EventoGastronomico eventoGastronomico: gestionDeEventosService.getEventos()){
             for (Participante participante : eventoGastronomico.getParticipantes().values()) {
                 if (dniParticipante.equals(participante.getDni())) {
-                    participanteBuscado = participante;
+                    participanteBuscado = participante.getId();
+                    existeParticipante = Boolean.TRUE;
                 }   
             }
         }
@@ -106,6 +102,21 @@ public class ParticipanteServiceImpl implements ParticipanteService{
             throw new NoSuchElementException("No existe el participante");
         }
         return participanteBuscado;
+    }
+
+    public List<EventoGastronomico> crearHistorial(Integer idParticipante) {
+        List<EventoGastronomico> historialDeEventoGastronomicos = new ArrayList<>();
+        boolean poseeHistorial = Boolean.FALSE;
+        for (EventoGastronomico eventoGastronomico: gestionDeEventosService.getEventos()){
+            if (eventoGastronomico.getParticipantes().containsKey(idParticipante)){
+                historialDeEventoGastronomicos.add(eventoGastronomico); 
+                poseeHistorial = Boolean.TRUE;  
+            }
+        }
+        if (!poseeHistorial){
+            throw new NoSuchElementException("No posee historial");
+        }
+        return historialDeEventoGastronomicos;
     }
 
 }

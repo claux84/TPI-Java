@@ -10,7 +10,10 @@ public interface GestionDeEventosService {
     List<EventoGastronomico> getEventos();
     Map<Integer, Cheff> getCheffs();
     void listarEventosDisponibles(LocalDateTime fechaYHora);
+    void listarEventosNoDisponibles(LocalDateTime fechaYHora);
+    void listarEventosRealizados();
     void listarEventos();
-    void listarCheff();
+
+    void listarCheffs();
 
 }

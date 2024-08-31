@@ -2,7 +2,7 @@ package ar.com.eventos.service.menu.impl;
 
 
 import ar.com.eventos.service.menu.MenuService;
-
+import ar.com.eventos.service.participante.ParticipanteService;
 import ar.com.eventos.service.archivos.ArchivosEventosService;
 import ar.com.eventos.service.cheff.CheffService;
 import ar.com.eventos.service.eventogastronomico.EventoGastronomicoService;
@@ -10,6 +10,7 @@ import ar.com.eventos.service.gestiondeeventos.GestionDeEventosService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -19,13 +20,15 @@ public class MenuServiceImpl implements MenuService {
     private ArchivosEventosService archivosEventosService;
     private CheffService cheffService;
     private GestionDeEventosService gestionDeEventosService;
+    private ParticipanteService participanteService;
     
 
-    public MenuServiceImpl( EventoGastronomicoService eventoGastronomicoService, ArchivosEventosService archivosEventosService, CheffService cheffService, GestionDeEventosService gestionDeEventosService){
+    public MenuServiceImpl( EventoGastronomicoService eventoGastronomicoService, ArchivosEventosService archivosEventosService, CheffService cheffService, GestionDeEventosService gestionDeEventosService, ParticipanteService participanteService){
         this.eventoGastronomicoService = eventoGastronomicoService;
         this.archivosEventosService = archivosEventosService;
         this.cheffService = cheffService;
         this.gestionDeEventosService = gestionDeEventosService;
+        this.participanteService = participanteService;
     }
 
     @Override
@@ -92,26 +95,41 @@ public class MenuServiceImpl implements MenuService {
                     eventoGastronomicoService.crearEvento(scanner);
                     break;
                 case 2:
-                    System.out.println("Ingrese id del evento gastronómico");
-                    Integer idEvento = scanner.nextInt();
+                    System.out.println("Inscripción de un participante ya registrado en un evento gastronómico");
+                    System.out.println("¿Desea buscar al participante por su dni? S/N");
+                    String alternativa = scanner.nextLine();
+                    Integer idParticipante = -1;
                     scanner.nextLine();
-                    System.out.println("Ingrese id del participante");
-                    Integer idParticipante = scanner.nextInt();
+                    if (alternativa.equalsIgnoreCase("S")) {
+                        System.out.println("Ingrese el DNI del participante");
+                        String dni = scanner.nextLine();
+                        try {
+                            idParticipante = participanteService.buscarParticipantePorDni(dni);
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage());
+                        }
+                    } else {
+                        System.out.println("Ingrese id del participante");
+                        idParticipante = scanner.nextInt();
+                        scanner.nextLine();
+                    }
+                    LocalDateTime fechaActual = LocalDateTime.now();
+                    gestionDeEventosService.listarEventosDisponibles(fechaActual);
+                    System.out.println("Ingrese id del evento gastronómico al cual desea inscribir al participante");
+                    Integer idEvento = scanner.nextInt();
                     scanner.nextLine();
                     eventoGastronomicoService.inscribirParticipanteAEvento(idEvento, idParticipante); 
                     break; 
                 case 3:
+                    gestionDeEventosService.listarEventos();
                     System.out.println("Ingrese id del evento gastronómico");
                     idEvento = scanner.nextInt();
                     scanner.nextLine();
+                    gestionDeEventosService.listarCheffs();
                     System.out.println("Ingrese id del cheff");
                     Integer idCheff = scanner.nextInt();
                     scanner.nextLine();
-                    try{
-                        eventoGastronomicoService.asignarCheffAEvento(idEvento, idCheff);
-                    }catch (NoSuchElementException e){
-                        System.out.println(e.getMessage());
-                    }   
+                    eventoGastronomicoService.asignarCheffAEvento(idEvento, idCheff);   
                     break;
                 case 4:
                     break;
@@ -140,7 +158,9 @@ public class MenuServiceImpl implements MenuService {
 
             switch (opcion){
                 case 1:
-                    System.out.println("Ingrese id del evento gastronómico");
+                    LocalDateTime fechaActual = LocalDateTime.now();
+                    gestionDeEventosService.listarEventosDisponibles(fechaActual);
+                    System.out.println("Ingrese id del evento gastronómico al cual desea inscribir al participante");
                     Integer idEvento = scanner.nextInt();
                     scanner.nextLine();
                     try{
@@ -207,16 +227,30 @@ public class MenuServiceImpl implements MenuService {
 
             switch (opcion){
                 case 1:
+                    System.out.println("Cargar reseña de un evento gastronomico realizada por un participante");
+                    System.out.println("¿Desea buscar al participante por su dni? S/N");
+                    String alternativa = scanner.nextLine();
+                    Integer idParticipante = -1;
+                    scanner.nextLine();
+                    if (alternativa.equalsIgnoreCase("S")) {
+                        System.out.println("Ingrese el DNI del participante");
+                        String dni = scanner.nextLine();
+                        try {
+                            idParticipante = participanteService.buscarParticipantePorDni(dni);
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage());
+                        }
+                    } else {
+                        System.out.println("Ingrese id del participante");
+                        idParticipante = scanner.nextInt();
+                        scanner.nextLine();
+                    }
+                    LocalDateTime fechaActual = LocalDateTime.now();
+                    gestionDeEventosService.listarEventosDisponibles(fechaActual);
                     System.out.println("Ingrese id del evento gastronómico");
                     Integer idEvento = scanner.nextInt();
-                    System.out.println("Ingrese id de estudiante");
-                    String idParticipante = scanner.nextLine();
-                    scanner.nextLine();
-                    try{
-                        eventoGastronomicoService.agregarReseniaDeParticipanteAEvento();
-                    }catch (NoSuchElementException e){
-                        System.out.println(e.getMessage());
-                    } 
+                    scanner.nextLine();          
+                    eventoGastronomicoService.agregarReseniaDeParticipanteAEvento(idEvento, idParticipante);
                     break;
                 case 2:
                     break;
@@ -236,49 +270,109 @@ public class MenuServiceImpl implements MenuService {
         do {
             System.out.println("Ingrese opcion : \n");
             System.out.println("1. Listar eventos disponibles a partir de una fecha dada");
-            System.out.println("2. Listar eventos no disponibles a partir de una fecha dada (No implementado)");
-            System.out.println("3. Listar todos los eventos (No implementado)");
-            System.out.println("4. Listar cheffs");
-            System.out.println("5. Listar participantes de un evento (No implementado)");
-            System.out.println("6. Listar reseñas de un evento (No implementado)");
-            System.out.println("7. Exportar eventos no disponibles a partir de una fecha dada");
-            System.out.println("8. Volver al menú anterior");
+            System.out.println("2. Listar eventos no disponibles a partir de una fecha dada");
+            System.out.println("3. Listar todos los eventos");
+            System.out.println("4. Listar eventos ya realizados");
+            System.out.println("5. Listar cheffs");
+            System.out.println("6. Listar participantes de un evento");
+            System.out.println("7. Listar reseñas de un evento");
+            System.out.println("8. Exportar eventos no disponibles a partir de una fecha dada");
+            System.out.println("9. Volver al menú anterior");
 
             opcion = scanner.nextInt();
             scanner.nextLine();
 
             switch (opcion){
                 case 1:
-                    System.out.println("Ingrese la fecha y hora a partir de la cual necesita la lista (formato: 01-01-2024 12:00 ): ");
-                    String fechaString = scanner.nextLine();
+                    System.out.println("Desea el listado de eventos disponibles a partir de la fecha actual?S/N");
+                    String alternativa = scanner.nextLine();
                     scanner.nextLine();
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-                    LocalDateTime fechaYHora = LocalDateTime.parse(fechaString, formatter);
+                    LocalDateTime fechaYHora;
+                    if (alternativa.equalsIgnoreCase("S")) {
+                        fechaYHora = LocalDateTime.now();
+                    } else {
+                        System.out.println("Ingrese la fecha y hora a partir de la cual necesita la lista (formato: 01-01-2024 12:00 ): ");
+                        String fechaString = scanner.nextLine();
+                        scanner.nextLine();
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                        fechaYHora = LocalDateTime.parse(fechaString, formatter);
+                    }
                     gestionDeEventosService.listarEventosDisponibles(fechaYHora);
                     break;
                 case 2:
+                    System.out.println("Desea el listado de eventos no disponibles a partir de la fecha actual?S/N");
+                    alternativa = scanner.nextLine();
+                    scanner.nextLine();
+                    if (alternativa.equalsIgnoreCase("S")) {
+                        fechaYHora = LocalDateTime.now();
+                    } else {
+                        System.out.println("Ingrese la fecha y hora a partir de la cual necesita la lista (formato: 01-01-2024 12:00 ): ");
+                        String fechaString = scanner.nextLine();
+                        scanner.nextLine();
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                        fechaYHora = LocalDateTime.parse(fechaString, formatter);
+                    }
+                    gestionDeEventosService.listarEventosNoDisponibles(fechaYHora);
                     break;
                 case 3:
                     gestionDeEventosService.listarEventos();
                     break;
                 case 4:
-                    gestionDeEventosService.listarCheff();
+                    gestionDeEventosService.listarEventosRealizados();
                     break;
                 case 5:
-                    
+                    gestionDeEventosService.listarCheffs();
                     break;
                 case 6:
+                    gestionDeEventosService.listarEventos();
+                    System.out.println("Ingrese id del evento gastronómico");
+                    int idEvento = scanner.nextInt();
+                    scanner.nextLine();
+                    eventoGastronomicoService.listarParticipantesDeEvento(idEvento); 
                     break;
                 case 7:
-                    archivosEventosService.exportarEventosCsv();
+                    gestionDeEventosService.listarEventos();
+                    System.out.println("Ingrese id del evento gastronómico");
+                    idEvento = scanner.nextInt();
+                    scanner.nextLine();
+                    eventoGastronomicoService.listarReseniasDeEvento(idEvento);
                     break;
-                case 8:    
+                case 8: 
+                    archivosEventosService.exportarEventosCsv(gestionDeEventosService.getEventos());
+                    break;
+                case 9:
                     break;
                 default:
                     break;
             }
         }while (opcion != 8);
 
+
     }
+    // private int controlEntradaEnteros(Scanner scanner){
+    //     int entero = -1;
+    //     try {
+    //         entero = scanner.nextInt();
+
+    //     } catch (InputMismatchException e) {
+    //         System.out.println("Por favor ingrese un número entero");
+    //         scanner.nextLine();
+    //     }
+    //     return entero;   
+    // }
+
+    // private LocalDateTime controlEntradaFecha(Scanner scanner){
+    //     LocalDateTime fechaYHora = null;
+    //     try {
+    //         String fechaString = scanner.nextLine();
+    //         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+    //         fechaYHora = LocalDateTime.parse(fechaString, formatter);
+            
+    //     } catch (InputMismatchException e) {
+    //         System.out.println("Por favor ingrese un número entero");
+    //         scanner.nextLine();
+    //     }
+    //     return  fechaYHora;   
+    // }
 
 }
