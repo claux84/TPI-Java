@@ -48,8 +48,7 @@ public class EventoGastronomicoServiceImpl implements EventoGastronomicoService{
         String ubicacion = scanner.nextLine();
         scanner.nextLine();
         System.out.println("Ingrese la capacidad maxima de participantes del evento gastronómico: ");
-        int capacidad = scanner.nextInt();
-        scanner.nextLine();
+        int capacidad = EntradaUtil.controlEntradaEnteros(scanner);
         List<Resenia> resenias = new ArrayList<>();
         Map<Integer, Participante> participantes = new TreeMap<>();
         EventoGastronomico nuevoEventoGastronomico = new EventoGastronomico(nombre, descripcion, fechaYHora, ubicacion, capacidad, null, resenias, participantes);

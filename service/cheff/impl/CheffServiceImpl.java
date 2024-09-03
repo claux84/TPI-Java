@@ -12,6 +12,7 @@ import ar.com.eventos.domain.EventoGastronomico;
 import ar.com.eventos.enumeration.TiposDeCocinaEnum;
 import ar.com.eventos.service.cheff.CheffService;
 import ar.com.eventos.service.gestiondeeventos.GestionDeEventosService;
+import ar.com.eventos.util.EntradaUtil;
 
 public class CheffServiceImpl implements CheffService {
     private GestionDeEventosService gestionDeEventosService;
@@ -34,8 +35,7 @@ public class CheffServiceImpl implements CheffService {
         scanner.nextLine();
 
         System.out.println("Ingrese el dni del cheff: ");
-        String dniCheff = scanner.nextLine();
-        scanner.nextLine();
+        String dniCheff = EntradaUtil.controlEntradaDni(scanner);
 
         System.out.println("Ingrese la especialidad del cheff");
         System.out.println("1. Panaderia");
@@ -43,8 +43,7 @@ public class CheffServiceImpl implements CheffService {
         System.out.println("3. Cocina Nacional");
         System.out.println("4. Cocina Internacional");
         System.out.println("5. Bar y Cocteleria");
-        int opcion = scanner.nextInt();
-        scanner.nextLine();
+        int opcion = EntradaUtil.controlEntradaEnteros(scanner);
         TiposDeCocinaEnum especialidadCheff;
 
         especialidadCheff = (

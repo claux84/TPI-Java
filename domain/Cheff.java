@@ -32,7 +32,8 @@ public class Cheff extends Persona {
         return  "ID: " + this.getId()
                 + " Nombre y Apellido : " + this.getNombre() + " " + this.getApellido()
                 + " DNI: " + this.getDni()
-                + " Especialidad: " + this.especialidad;
+                + " Especialidad: " + this.especialidad
+                + " Eventos Asignados: " + this.eventos.toString();
     }
 }
 

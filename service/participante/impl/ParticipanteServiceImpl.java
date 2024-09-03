@@ -2,7 +2,7 @@ package ar.com.eventos.service.participante.impl;
 
 import ar.com.eventos.service.gestiondeeventos.GestionDeEventosService;
 import ar.com.eventos.service.participante.ParticipanteService;
-
+import ar.com.eventos.util.EntradaUtil;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -36,8 +36,7 @@ public class ParticipanteServiceImpl implements ParticipanteService{
         scanner.nextLine();
 
         System.out.println("Ingrese el dni del participante: ");
-        String dniParticipante = scanner.nextLine();
-        scanner.nextLine();
+        String dniParticipante = EntradaUtil.controlEntradaDni(scanner);
 
         Set<TiposDeCocinaEnum> interesesCulinarios = new HashSet<>();
         int opcion;
@@ -50,9 +49,8 @@ public class ParticipanteServiceImpl implements ParticipanteService{
             System.out.println("5. Bar y Cocteleria");
             System.out.println("6. Finalizar elección");
 
-            opcion= scanner.nextInt();
-            scanner.nextLine();
-
+            opcion= EntradaUtil.controlEntradaEnteros(scanner);
+            
             switch (opcion) {
                 case 1: interesesCulinarios.add(TiposDeCocinaEnum.PANADERIA);
                     break;
