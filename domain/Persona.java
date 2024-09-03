@@ -1,15 +1,14 @@
 package ar.com.eventos.domain;
 
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 public class Persona {
-    private int id;
+    protected int id;
     private static AtomicInteger atomicInteger = new AtomicInteger(0);
-    private String nombre;
-    private String apellido;
-    private String dni;
+    protected String nombre;
+    protected String apellido;
+    protected String dni;
 
     public Persona( String nombre, String apellido, String dni){
         setId();
@@ -43,29 +42,10 @@ public class Persona {
     }
 
     public void setDni(String dni) {
-        boolean dniValido = validarDni(dni);
-        if (dniValido) {
-            this.dni = dni;
-        } else {
-            System.out.println(" DNI invalido");
-        }
+        this.dni = dni;
     }
 
-    private boolean validarDni(String dni){
-        String patronDni = "[0-9]{7,8}";
-        Pattern patron = Pattern.compile(patronDni);
-        if (dni!= null) {
-            Matcher coincidencia = patron.matcher(dni);
-            if (coincidencia.matches()) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
 
-    }
 
     public String getDni() {
         return dni;

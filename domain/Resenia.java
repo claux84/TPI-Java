@@ -38,23 +38,12 @@ public class Resenia {
         return eventoGastronomico;
     }
     public void setCalificacion(int calificacion) {
-        boolean calificacionValida = validarCalificacion(calificacion);
-        if (calificacionValida){
-            this.calificacion = calificacion;
-        } else {
-            System.out.println( "Calificacion invalida");
-        }
+        this.calificacion = calificacion;
     }
     public int getCalificacion() {
         return calificacion;
     }
-    private boolean validarCalificacion(int calificacion){
-        if (calificacion >= 1 && calificacion <= 5){
-            return true;
-        } else {
-            return false;
-        }
-    }
+    
     public void setComentario(String comentario) {
         this.comentario = comentario;
     }

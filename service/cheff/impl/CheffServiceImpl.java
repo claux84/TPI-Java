@@ -22,9 +22,9 @@ public class CheffServiceImpl implements CheffService {
 
 
     @Override
-    public Cheff registrarCheff(){
-        
-        Scanner scanner = new Scanner(System.in);
+    public Cheff registrarCheff(Scanner scanner){
+        System.out.println("Registrar Cheff");
+        System.out.println("-----------------------------------------------------------------");
         System.out.println("Ingrese el nombre del cheff: ");
         String nombreCheff = scanner.nextLine();
         scanner.nextLine();

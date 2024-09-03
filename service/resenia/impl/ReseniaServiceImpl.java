@@ -9,8 +9,7 @@ import ar.com.eventos.service.resenia.ReseniaService;
 
 public class ReseniaServiceImpl implements ReseniaService {
     @Override
-    public Resenia crearResenia(Participante participante, EventoGastronomico eventoGastronomico) {
-        Scanner scanner = new Scanner(System.in);
+    public Resenia crearResenia(Participante participante, EventoGastronomico eventoGastronomico, Scanner scanner) {
         System.out.println("-----------------------------------------------------");
         System.out.println("Crear Reseña");
         System.out.println("-----------------------------------------------------");

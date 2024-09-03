@@ -27,6 +27,17 @@ public class Participante extends Persona{
         return historialDeEventos;
     }  
 
+    private String historialToString(){
+        String toString = null;
+        for (EventoGastronomico eventoGastronomico : this.historialDeEventos) {
+            toString = "Nombre: " + eventoGastronomico.getNombre()
+                        + " Descripción: " + eventoGastronomico.getDescripcion()
+                        + "Fecha y Hora: " + eventoGastronomico.getFechaYHora();
+        }
+        return toString;
+    }
+
+   
 
 
     @Override
@@ -35,7 +46,7 @@ public class Participante extends Persona{
                 + " Nombre y Apellido : " + this.getNombre() + " " + this.getApellido()
                 + " DNI: " + this.getDni()
                 + " Intereses Culinarios : " + this.interesesCulinarios.toString()
-                + " Historial de Eventos: " + this.historialDeEventos.toString();
+                + " Historial de Eventos: " + historialToString();
 
     }
 }

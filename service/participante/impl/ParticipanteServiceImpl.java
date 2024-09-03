@@ -25,9 +25,7 @@ public class ParticipanteServiceImpl implements ParticipanteService{
 
 
     @Override
-    public Participante registrarParticipante() {
-        
-        Scanner scanner = new Scanner(System.in);
+    public Participante registrarParticipante(Scanner scanner) {
 
         System.out.println("Ingrese el nombre del participante: ");
         String nombreParticipante = scanner.nextLine();
@@ -55,16 +53,20 @@ public class ParticipanteServiceImpl implements ParticipanteService{
             opcion= scanner.nextInt();
             scanner.nextLine();
 
-            interesesCulinarios.add(
-                switch (opcion){
-                    case 1 -> TiposDeCocinaEnum.PANADERIA;
-                    case 2 -> TiposDeCocinaEnum.PASTELERIA;
-                    case 3 -> TiposDeCocinaEnum.COCINA_NACIONAL;
-                    case 4 -> TiposDeCocinaEnum.COCINA_INTERNACIONAL;
-                    case 5 -> TiposDeCocinaEnum.BAR_Y_COCTELERIA;
-                    default -> null;
-                }
-        );
+            switch (opcion) {
+                case 1: interesesCulinarios.add(TiposDeCocinaEnum.PANADERIA);
+                    break;
+                case 2: interesesCulinarios.add(TiposDeCocinaEnum.PASTELERIA);
+                    break;
+                case 3: interesesCulinarios.add(TiposDeCocinaEnum.COCINA_NACIONAL);
+                    break;
+                case 4: interesesCulinarios.add(TiposDeCocinaEnum.COCINA_INTERNACIONAL);
+                    break;
+                case 5: interesesCulinarios.add(TiposDeCocinaEnum.BAR_Y_COCTELERIA);
+                    break;
+                default:
+                    break;
+            }
         } while (opcion != 6);
         List<EventoGastronomico> historialDeEventos = new ArrayList<>();
         Participante nuevoParticipante = new Participante(nombreParticipante, apellidoParticipante, dniParticipante, interesesCulinarios, historialDeEventos);        

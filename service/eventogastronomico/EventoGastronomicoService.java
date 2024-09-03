@@ -8,10 +8,10 @@ import java.util.Scanner;
 
 public interface EventoGastronomicoService {
     EventoGastronomico crearEvento(Scanner scanner);
-    void inscribirParticipante(Integer idEvento);
+    void inscribirParticipante(Integer idEvento, Participante participante);
     void inscribirParticipanteAEvento(Integer idEvento, Integer idParticipante );
     void asignarCheffAEvento(Integer idEvento, Integer idCheff);
-    void agregarReseniaDeParticipanteAEvento(Integer idEvento, Integer idParticipante );
+    void agregarReseniaDeParticipanteAEvento(Integer idEvento, Integer idParticipante, Scanner scanner);
     int buscarEventoGastronomico(Integer idEvento);
     void listarParticipantesDeEvento(Integer idEvento);
     void listarReseniasDeEvento(Integer idEvento);
